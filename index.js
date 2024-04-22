@@ -11,14 +11,16 @@ app.get("/commit", (req, res) => {
 });
 
 // Schedule the daily commit
+const count = 3;
 cron.schedule("*/2 * * * *", () => {
   console.log("in the schedule");
   commitToGit();
+  count++;
 });
 
 function commitToGit() {
   exec(
-    'git add . && git commit -m "Daily automated test one" && git push origin main',
+    `git add . && git commit -m "Daily automated test ${count}" && git push origin main`,
     (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing git commands: ${error}`);
