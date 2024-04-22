@@ -3,6 +3,7 @@ const { exec } = require("child_process");
 const cron = require("node-cron");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = 3000;
@@ -13,14 +14,36 @@ app.get("/commit", (req, res) => {
   commitToGit();
   res.send("Commit process initiated!");
 });
+function createRandomFile(directory) {
+  return new Promise((resolve, reject) => {
+    // Generate a random filename
+    const randomName = crypto.randomBytes(20).toString("hex");
+    const filePath = path.join(directory, `${randomName}.txt`);
 
-// Schedule the commit every 2 minutes
+    // Create a file with the random name
+    fs.writeFile(filePath, "Random content", "utf8", (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      console.log(`Created file: ${filePath}`);
+      resolve(filePath); // Resolve with the file path
+    });
+  });
+}
+
+// Replace with your directory path
 cron.schedule("*/1 * * * *", () => {
   console.log("in the schedule");
-  commitToGit();
-  count++;
+  createRandomFile(repoDir)
+    .then(() => commitToGit())
+    .then(() => {
+      count++;
+    })
+    .catch((error) => {
+      console.error(`Error: ${error}`);
+    });
 });
-
 // Replace "automated_bot" with your Git repository directory name
 
 function commitToGit() {
@@ -48,7 +71,6 @@ function commitToGit() {
     .then(() => {
       console.log(`Commit ${count} successful`);
     })
-    .then(() => execPromise("npm run dev"))
     .catch((error) => {
       console.error(`Error executing git commands: ${error}`);
     });
