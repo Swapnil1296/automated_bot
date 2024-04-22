@@ -11,7 +11,8 @@ app.get("/commit", (req, res) => {
 });
 
 // Schedule the daily commit
-cron.schedule("0 0 * * *", () => {
+cron.schedule("*/2 * * * *", () => {
+  console.log("in the schedule");
   commitToGit();
 });
 
