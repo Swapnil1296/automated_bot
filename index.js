@@ -17,7 +17,7 @@ cron.schedule("0 0 * * *", () => {
 
 function commitToGit() {
   exec(
-    'git add . && git commit -m "Daily automated commit" && git push origin main',
+    'git add . && git commit -m "Daily automated test one" && git push origin main',
     (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing git commands: ${error}`);
