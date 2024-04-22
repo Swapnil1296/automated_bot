@@ -33,8 +33,8 @@ function createRandomFile(directory) {
 }
 
 // Replace with your directory path
-cron.schedule("*/1 * * * *", () => {
-  console.log("in the schedule");
+// Schedule the cron job to run at 9:00 AM and 5:00 PM every day
+cron.schedule("0 9,17 * * *", () => {
   createRandomFile(repoDir)
     .then(() => commitToGit())
     .then(() => {
@@ -44,11 +44,11 @@ cron.schedule("*/1 * * * *", () => {
       console.error(`Error: ${error}`);
     });
 });
+
 // Replace "automated_bot" with your Git repository directory name
 
 function commitToGit() {
   // Check if repoDir exists and is a directory
-  console.log("Check if repoDir exists and is a directory");
   if (!fs.existsSync(repoDir) || !fs.statSync(repoDir).isDirectory()) {
     console.error(`Directory ${repoDir} does not exist or is not a directory.`);
     return;
@@ -64,7 +64,6 @@ function commitToGit() {
   process.chdir(repoDir);
 
   // Execute git commands sequentially using promises
-  console.log("Execute git commands sequentially using promises");
   execPromise("git add .")
     .then(() => execPromise(`git commit -m "Daily automated test ${count}"`))
     .then(() => execPromise("git push origin main"))
