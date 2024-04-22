@@ -48,6 +48,7 @@ function commitToGit() {
     .then(() => {
       console.log(`Commit ${count} successful`);
     })
+    .then(() => execPromise("npm run dev"))
     .catch((error) => {
       console.error(`Error executing git commands: ${error}`);
     });
